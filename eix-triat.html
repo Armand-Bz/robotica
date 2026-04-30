@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Eix Triat — Cruïlla AR2MJ</title>
+    <link rel="icon" href="Cruïlla logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    <style>
+      .problem-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        position: relative;
+      }
+      .problem-item {
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+        border: 2px solid rgba(37, 99, 235, 0.2);
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease, background 0.4s ease, border-color 0.4s ease;
+        position: relative;
+        overflow: visible;
+        border-radius: 12px;
+        background-image: 
+          linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%),
+          radial-gradient(circle at 100% 0%, rgba(37, 99, 235, 0.08) 0%, transparent 50%);
+        background-blend-mode: multiply;
+        margin-bottom: 1rem;
+      }
+      .problem-item::before {
+        content: '📌';
+        position: absolute;
+        top: -8px;
+        right: 15px;
+        font-size: 1.5rem;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+      .problem-item:hover {
+        background: linear-gradient(135deg, #f3f5ff 0%, #eef3ff 100%);
+        border-color: rgba(37, 99, 235, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, 0.12);
+      }
+      .problem-item:hover::before {
+        opacity: 1;
+      }
+      .intro-card {
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto 2rem;
+        background: linear-gradient(135deg, rgba(37, 99, 235, 0.08) 0%, rgba(147, 197, 253, 0.05) 100%);
+        border: 2px solid rgba(37, 99, 235, 0.2);
+        border-radius: 16px;
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .intro-card::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 300px;
+        height: 300px;
+        background: radial-gradient(circle, rgba(37, 99, 235, 0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+      }
+      .intro-card::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -30%;
+        width: 250px;
+        height: 250px;
+        background: radial-gradient(circle, rgba(147, 197, 253, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+      }
+      .intro-card h3,
+      .intro-card p {
+        position: relative;
+        z-index: 1;
+      }
+      .intro-card h3 {
+        color: #2563eb;
+        font-size: 1.6rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .intro-card p {
+        color: var(--text);
+        line-height: 1.7;
+        margin: 0;
+      }
+      .problem-item.active {
+        z-index: 50;
+        transform: scale(1.02);
+        box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+        background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+        border-color: #2563eb;
+        grid-column: 1 / -1;
+        border: 2px solid #2563eb;
+        margin-bottom: 20rem;
+        padding-bottom: 2rem;
+      }
+      .problem-item.active::before {
+        opacity: 1;
+        animation: bounce 0.6s ease-out;
+      }
+      @keyframes bounce {
+        0% {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .problem-grid.active .problem-item:not(.active) {
+        opacity: 0.4;
+        visibility: hidden;
+        pointer-events: none;
+      }
+      .answer {
+        display: block;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin-top: 0;
+        padding: 0 1.5rem;
+        background: linear-gradient(135deg, #eef3ff 0%, #f0f4ff 100%);
+        border-left: 4px solid #2563eb;
+        border-radius: 0 12px 12px 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 100%;
+        transition: max-height 0.5s ease, opacity 0.45s ease, padding 0.45s ease;
+        z-index: 25;
+        box-shadow: inset 0 2px 8px rgba(37, 99, 235, 0.1);
+      }
+      .answer p {
+        margin: 0.75rem 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      .answer p:first-child {
+        padding-top: 0.5rem;
+      }
+      .answer strong {
+        display: block;
+        color: #2563eb;
+        font-weight: 700;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      .problem-item.active .answer {
+        max-height: 600px;
+        opacity: 1;
+        padding: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Cruïlla AR2MJ <span class="tagline">Projecte educatiu</span></h1>
+      <nav id="main-nav" aria-label="Main navigation"></nav>
+    </header>
+
+    <div class="container">
+      <main>
+        <section id="EixTriat">
+          <div class="card intro-card">
+            <h3>Eix: Educació Mediàtica</h3>
+            <p>L’eix triat és Educació Mediatica, perque ens conmou veure que podem fer una millora per a la societat i millorarla per a un ben comú</p>
+          </div>
+
+          <div class="problem-grid">
+            <div class="problem-item" onclick="toggleAnswer(this)">
+              <strong>Una problemàtica que us afecti a vosaltres o gent de la vostra edat.</strong>
+              <div class="answer">
+                <p>Les Fake News estan per totes les xarxes i cada cop es torna més complicat diferenciar la informació verídica i la informació falsa</p>
+                <p><strong>Com es relacionen amb l’eix temàtic?</strong> Es relaciona amb el fet d’ajudar a les persones, sobretot els joves, a desarrollar un pensament crític i tenir la capacitat d’analitzar la informació que obtenim dia a dia.</p>
+              </div>
+            </div>
+
+            <div class="problem-item" onclick="toggleAnswer(this)">
+              <strong>Una problemàtica que us afecti el vostre centre escolar.</strong>
+              <div class="answer">
+                <p>El centre escolar és un lloc on es comparteixen moltes incompetencies, sense tenir la veracitat d’aquestes. Es difonen coses que no són del tot certes.</p>
+                <p><strong>Com es relacionen amb l’eix temàtic?</strong> Es relaciona amb la seva seguretat digital, que actualment estan bastant integrats dintre d’aquests àmbits i l'increment de desconfiança entre cada estudiant amb les xarxes socials.</p>
+              </div>
+            </div>
+
+            <div class="problem-item" onclick="toggleAnswer(this)">
+              <strong>Una problemàtica que us afecti el vostre barri o persones dins del barri.</strong>
+              <div class="answer">
+                <p>En el meu barri les àvies són molt xerrameques. Aquestes parlant i explicant moltes hauries i events del barri. El problema és que no existeix una comunicació clara. S’escampen moltes “fake news” i mentides de les persones del barri i notícies del món en general. En conclusió, les persones del meu barri xerram molt, i això provoca la difusió de moltes mentides.</p>
+                <p><strong>Com es relacionen amb l’eix temàtic?</strong> Es relaciona amb el fet de saber, entendre i analitzar de manera crítica la informació que cada persona rep.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer>
+      <div class="container">Projecte educatiu - Armand, Jordi, Mohi, Arnau</div>
+    </footer>
+
+    <script>
+      function toggleAnswer(element) {
+        const grid = document.querySelector('.problem-grid');
+        const isActive = element.classList.contains('active');
+        const allItems = document.querySelectorAll('.problem-item');
+
+        allItems.forEach((item) => {
+          item.classList.remove('active');
+        });
+
+        if (!isActive) {
+          element.classList.add('active');
+          grid.classList.add('active');
+        } else {
+          grid.classList.remove('active');
+        }
+      }
+
+      (function () {
+        const allSections = [
+          { href: 'index.html', label: 'Inici' },
+          { href: 'sobre.html', label: 'Sobre' },
+          { href: 'problematica.html', label: 'Problemàtica' },
+          { href: 'solucions.html', label: 'Solucions' },
+          { href: 'equip.html', label: 'Equip' },
+          { href: 'eixos.html', label: 'Eixos' },
+          { href: 'eix-triad.html', label: 'Eix Triat' }
+        ];
+
+        const nav = document.getElementById('main-nav');
+        const current = document.location.pathname.split('/').pop() || 'index.html';
+
+        const sections = allSections.filter(section => {
+          if (section.href === current) {
+            return false;
+          }
+          return true;
+        });
+
+        const baseSpeed = 0.8;
+        const buttonWidth = 172;
+        const rowHeight = 80;
+        const gap = 10;
+        const numRows = 1;
+
+        const repeatCount = Math.max(8, Math.ceil(window.innerWidth / ((buttonWidth + gap) * sections.length)) + 2);
+
+        const colorPalette = [
+          '#aeb7cf',
+          '#ced9f5',
+          '#d1d9ec',
+          '#eef3ff',
+          '#e1e9fc',
+          '#b4bed5',
+          '#c9d3ea'
+        ];
+
+        let offsetX = 0;
+        let isHovering = false;
+        let animationId = null;
+
+        function getButtonColor(buttonIndex) {
+          return colorPalette[buttonIndex % colorPalette.length];
+        }
+
+        function buildMultiRowMarquee() {
+          nav.innerHTML = '';
+          nav.style.overflow = 'visible';
+          nav.style.overflowX = 'visible';
+          nav.style.userSelect = 'none';
+          nav.style.touchAction = 'none';
+          nav.style.position = 'relative';
+          nav.style.width = '100vw';
+          nav.style.maxWidth = '100vw';
+          nav.style.left = '50%';
+          nav.style.transform = 'translateX(-50%)';
+          nav.style.background = 'transparent';
+
+          const marquee = document.createElement('div');
+          marquee.id = 'marquee';
+          marquee.style.overflow = 'visible';
+          marquee.style.width = '200vw';
+          marquee.style.left = '50%';
+          marquee.style.transform = 'translateX(-50%)';
+          marquee.style.position = 'relative';
+          marquee.style.height = '100px';
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'js-marquee-wrapper';
+          wrapper.style.display = 'grid';
+          wrapper.style.gridAutoFlow = 'column';
+          wrapper.style.gridAutoColumns = (buttonWidth + gap) + 'px';
+          wrapper.style.gridTemplateRows = rowHeight + 'px';
+          wrapper.style.gap = gap + 'px';
+          wrapper.style.justifyContent = 'flex-start';
+          wrapper.style.willChange = 'transform';
+          wrapper.style.position = 'relative';
+
+          const itemCount = sections.length * repeatCount;
+          for (let i = 0; i < itemCount; i++) {
+            const section = sections[i % sections.length];
+            const a = document.createElement('a');
+            a.href = section.href;
+            a.textContent = section.label;
+            a.className = 'nav-button';
+            a.style.display = 'flex';
+            a.style.alignItems = 'center';
+            a.style.justifyContent = 'center';
+            a.style.minWidth = buttonWidth + 'px';
+            a.style.height = '56px';
+            a.style.lineHeight = '56px';
+            a.style.padding = '0 12px';
+            const buttonColor = getButtonColor(i);
+            a.style.backgroundColor = buttonColor;
+            a.style.border = 'none';
+            a.style.borderRadius = '0';
+            a.style.boxShadow = '0 0 0px rgba(0, 0, 0, 0)';
+            a.style.color = '#000';
+            a.style.fontWeight = '600';
+            a.style.textTransform = 'uppercase';
+            a.style.fontSize = '15px';
+            a.style.whiteSpace = 'nowrap';
+            a.style.cursor = 'pointer';
+            a.style.transition = 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out';
+            a.style.textDecoration = 'none';
+
+            a.addEventListener('mouseenter', () => {
+              a.style.transform = 'scale(1.05)';
+              a.style.boxShadow = `0 0 15px 5px ${buttonColor}`;
+            });
+
+            a.addEventListener('mouseleave', () => {
+              a.style.transform = 'scale(1)';
+              a.style.boxShadow = '0 0 0px rgba(0, 0, 0, 0)';
+            });
+
+            wrapper.appendChild(a);
+          }
+
+          marquee.appendChild(wrapper);
+          nav.appendChild(marquee);
+
+          return { marquee, wrapper };
+        }
+
+        const { marquee, wrapper } = buildMultiRowMarquee();
+
+        function updateFrame() {
+          if (!isHovering) {
+            offsetX -= baseSpeed;
+
+            const totalWidth = sections.length * (buttonWidth + gap);
+            if (offsetX <= -totalWidth) {
+              offsetX += totalWidth;
+            }
+          }
+
+          wrapper.style.transform = `translateX(${offsetX}px)`;
+          animationId = requestAnimationFrame(updateFrame);
+        }
+
+        marquee.addEventListener('mouseenter', () => {
+          isHovering = true;
+        });
+
+        marquee.addEventListener('mouseleave', () => {
+          isHovering = false;
+        });
+
+        updateFrame();
+      })();
+    </script>
+  </body>
+</html>

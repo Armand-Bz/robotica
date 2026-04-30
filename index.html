@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Cruïlla AR2MJ — Projecte</title>
+    <link rel="icon" href="Cruïlla logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Cruïlla AR2MJ <span class="tagline">Projecte educatiu</span></h1>
+      <nav id="main-nav" aria-label="Main navigation"></nav>
+    </header>
+
+    <div class="full-carousel">
+      <div class="carousel-track" id="carouselTrack">
+        <div class="carousel-slide">
+          <img src="Treballant1.jpeg" alt="Treballant 1" style="object-position: center 30%;">
+        </div>
+        <div class="carousel-slide">
+          <img src="Treballant2.jpeg" alt="Treballant 2" style="object-position: center 40%;">
+        </div>
+        <div class="carousel-slide">
+          <img src="Treballant4.jpeg" alt="Treballant 3" style="object-position: center 50%;">
+        </div>
+        <div class="carousel-slide">
+          <img src="Treballant3.jpeg" alt="Treballant 4" style="object-position: center 60%;">
+        </div>
+      </div>
+      <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <div class="container">
+      <main>
+        <div class="card">
+          <p class="xcenter">Benvinguts a la nostra web! Cruïlla AR2MJ és un projecte educatiu per disminuir els accidents i ajudar als serveis d'emergencia.</p>
+          <p class="xcenter">Descobreix més sobre el nostre projecte començant per <a href="sobre.html">aquí</a>.</p>
+          
+          <div class="image-wrapper">
+            <img src="Cruïlla logo.png" alt="Cruïlla AR2MJ" class="image-wrapper">
+            <div class="image-hover-overlay">
+              <span class="overlay-text">Aquest és el logo del nostre projecte.</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    <footer>
+      <div class="container">Projecte educatiu - Armand, Jordi, Mohi, Arnau</div>
+    </footer>
+
+    <script>
+      (function () {
+        const allSections = [
+          { href: 'index.html', label: 'Inici' },
+          { href: 'sobre.html', label: 'Sobre' },
+          { href: 'problematica.html', label: 'Problemàtica' },
+          { href: 'solucions.html', label: 'Solucions' },
+          { href: 'equip.html', label: 'Equip' },
+          { href: 'eixos.html', label: 'Eixos' },
+          { href: 'eix-triat.html', label: 'Eix Triat' }
+        ];
+
+        const nav = document.getElementById('main-nav');
+        const current = document.location.pathname.split('/').pop() || 'index.html';
+        
+        const sections = allSections.filter(section => {
+          if (current === 'index.html' && section.href === 'index.html') {
+            return false;
+          }
+          if (section.href === current) {
+            return false;
+          }
+          return true;
+        });
+        
+        const baseSpeed = 0.8;
+        const buttonWidth = 172;
+        const rowHeight = 80;
+        const gap = 10;
+
+        const repeatCount = Math.max(8, Math.ceil(window.innerWidth / ((buttonWidth + gap) * sections.length)) + 2);
+
+        const colorPalette = [
+          '#aeb7cf', '#ced9f5', '#d1d9ec', '#eef3ff', '#e1e9fc', '#b4bed5', '#c9d3ea'
+        ];
+
+        let offsetX = 0;
+        let isHovering = false;
+        let animationId = null;
+
+        function getButtonColor(buttonIndex) {
+          return colorPalette[buttonIndex % colorPalette.length];
+        }
+
+        function buildMultiRowMarquee() {
+          nav.innerHTML = '';
+          nav.style.overflow = 'visible';
+          nav.style.overflowX = 'visible';
+          nav.style.userSelect = 'none';
+          nav.style.touchAction = 'none';
+          nav.style.position = 'relative';
+          nav.style.width = '100vw';
+          nav.style.maxWidth = '100vw';
+          nav.style.left = '50%';
+          nav.style.transform = 'translateX(-50%)';
+          nav.style.background = 'transparent';
+
+          const marquee = document.createElement('div');
+          marquee.id = 'marquee';
+          marquee.style.overflow = 'visible';
+          marquee.style.width = '200vw';
+          marquee.style.left = '50%';
+          marquee.style.transform = 'translateX(-50%)';
+          marquee.style.position = 'relative';
+          marquee.style.height = '100px';
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'js-marquee-wrapper';
+          wrapper.style.display = 'grid';
+          wrapper.style.gridAutoFlow = 'column';
+          wrapper.style.gridAutoColumns = (buttonWidth + gap) + 'px';
+          wrapper.style.gridTemplateRows = rowHeight + 'px';
+          wrapper.style.gap = gap + 'px';
+          wrapper.style.justifyContent = 'flex-start';
+          wrapper.style.willChange = 'transform';
+          wrapper.style.position = 'relative';
+
+          const itemCount = sections.length * repeatCount;
+          for (let i = 0; i < itemCount; i++) {
+            const section = sections[i % sections.length];
+            const a = document.createElement('a');
+            a.href = section.href;
+            a.textContent = section.label;
+            a.className = 'nav-button';
+            a.style.display = 'flex';
+            a.style.alignItems = 'center';
+            a.style.justifyContent = 'center';
+            a.style.minWidth = buttonWidth + 'px';
+            a.style.height = '56px';
+            a.style.lineHeight = '56px';
+            a.style.padding = '0 12px';
+            const buttonColor = getButtonColor(i);
+            a.style.backgroundColor = buttonColor;
+            a.style.border = 'none';
+            a.style.borderRadius = '0';
+            a.style.boxShadow = '0 0 0px rgba(0, 0, 0, 0)';
+            a.style.color = '#000';
+            a.style.fontWeight = '600';
+            a.style.textTransform = 'uppercase';
+            a.style.fontSize = '15px';
+            a.style.whiteSpace = 'nowrap';
+            a.style.cursor = 'pointer';
+            a.style.transition = 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out';
+            a.style.textDecoration = 'none';
+
+            a.addEventListener('mouseenter', () => {
+              a.style.transform = 'scale(1.05)';
+              a.style.boxShadow = `0 0 15px 5px ${buttonColor}`;
+            });
+
+            a.addEventListener('mouseleave', () => {
+              a.style.transform = 'scale(1)';
+              a.style.boxShadow = '0 0 0px rgba(0, 0, 0, 0)';
+            });
+
+            wrapper.appendChild(a);
+          }
+
+          marquee.appendChild(wrapper);
+          nav.appendChild(marquee);
+
+          return { marquee, wrapper };
+        }
+
+        const { marquee, wrapper } = buildMultiRowMarquee();
+
+        function updateFrame() {
+          if (!isHovering) {
+            offsetX -= baseSpeed;
+
+            const totalWidth = sections.length * (buttonWidth + gap);
+            if (offsetX <= -totalWidth) {
+              offsetX += totalWidth;
+            }
+          }
+
+          wrapper.style.transform = `translateX(${offsetX}px)`;
+          animationId = requestAnimationFrame(updateFrame);
+        }
+
+        marquee.addEventListener('mouseenter', () => {
+          isHovering = true;
+        });
+
+        marquee.addEventListener('mouseleave', () => {
+          isHovering = false;
+        });
+
+        updateFrame();
+      })();
+
+      (function initCarousel() {
+        const carouselTrack = document.getElementById('carouselTrack');
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dotsContainer = document.getElementById('carouselDots');
+        let currentSlide = 0;
+        let autoSlideInterval;
+
+        if (!carouselTrack || slides.length === 0) return;
+
+        function updateCarousel() {
+          const slideWidth = slides[0].clientWidth;
+          carouselTrack.style.transform = `translateX(-${currentSlide * slideWidth}px)`;
+          
+          document.querySelectorAll('.dot').forEach((dot, index) => {
+            dot.classList.toggle('active', index === currentSlide);
+          });
+        }
+
+        function createDots() {
+          if (!dotsContainer) return;
+          dotsContainer.innerHTML = '';
+          slides.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === currentSlide) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+              currentSlide = index;
+              updateCarousel();
+              resetAutoSlide();
+            });
+            dotsContainer.appendChild(dot);
+          });
+        }
+
+        function nextSlide() {
+          currentSlide = (currentSlide + 1) % slides.length;
+          updateCarousel();
+        }
+
+        function startAutoSlide() {
+          autoSlideInterval = setInterval(nextSlide, 4000);
+        }
+
+        function resetAutoSlide() {
+          clearInterval(autoSlideInterval);
+          startAutoSlide();
+        }
+
+        createDots();
+        startAutoSlide();
+
+        window.addEventListener('resize', () => {
+          updateCarousel();
+        });
+      })();
+    </script>
+  </body>
+</html>
