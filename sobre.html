@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sobre — Cruïlla AR2MJ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>Cruïlla AR2MJ <span class="tagline">Projecte educatiu</span></h1>
+      <nav id="main-nav" aria-label="Main navigation"></nav>
+    </header>
+
+    <div class="container">
+      <main>
+        <section id="Sobre">
+          <div class="columns">
+            <div class="col-main">
+              <div class="card accent">
+                <h3>Descripció</h3>
+                <p><strong>Cruïlla AR2MJ</strong> és un <strong>projecte educatiu</strong> que busca l'<strong>estalvi de temps i recursos</strong> en casos concrets. El nostre projecte implementa una <strong>càmera fixa</strong> que identifica <strong>senyals</strong> i <strong>tipus de cotxes</strong>. Això permet realitzar moltes coses. Per exemple, un <strong>cotxe policial</strong> o una <strong>ambulància</strong> que necessiti anar a molta velocitat per la ciutat, aquesta càmera la reconeixerà i modificarà els <strong>semàfors</strong> a conveniència. En conclusió aquesta càmera permet <strong>modificar els semàfors</strong> a gust.</p>
+              </div>
+            </div>
+            <aside class="col-side">
+              <div class="card accent">
+                <h3>Què s'ha utilitzat?</h3>
+                <p class="tight">Visual Studio Code, codi HTML, CSS i STEAMakersBlocks</p>
+                <div class="icon-row">
+                  <a href="https://code.visualstudio.com/" target="_blank">
+                    <img src="VisualStudioCode.jpg" alt="Visual Studio Code" />
+                  </a>
+                  <a href="https://en.wikipedia.org/wiki/HTML" target="_blank">
+                    <img src="FotoCodiHTML.jpg" alt="Codi HTML" />
+                  </a>
+                  <a href="https://en.wikipedia.org/wiki/CSS" target="_blank">
+                    <img src="CSS.jpg" alt="CSS" />
+                  </a>
+                  <a href="https://www.steamakersblocks.com/" target="_blank">
+                    <img src="Steamakersblocks.png" alt="STEAMakersBlocks" />
+                  </a>
+                </div>
+              </div>
+            </aside>
+          </div>
+
+          <div class="card accent contact-card">
+            <h3>Contacte</h3>
+            <p>Enllaç del correu: <a href="https://www.google.com/?safe=active&ssui=on" target="_blank">No existeix.com</a></p>
+            <p>Web: <a href="https://www.google.com/?safe=active&ssui=on">No existeix.com</a></p>
+          </div>
+        </section>
+      </main>
+    </div>
+    <footer>
+      <div class="container">Projecte educatiu - Armand, Jordi, Mohi, Arnau</div>
+    </footer>
+
+    <script>
+      (function () {
+        const allSections = [
+          { href: 'index.html', label: 'Inici' },
+          { href: 'sobre.html', label: 'Sobre' },
+          { href: 'problematica.html', label: 'Problemàtica' },
+          { href: 'solucions.html', label: 'Solucions' },
+          { href: 'equip.html', label: 'Equip' },
+          { href: 'eixos.html', label: 'Eixos' },
+          { href: 'eix-triat.html', label: 'Eix Triat' }
+        ];
+
+        const nav = document.getElementById('main-nav');
+        const current = document.location.pathname.split('/').pop() || 'index.html';
+
+        const sections = allSections.filter(section => {
+          if (section.href === current) {
+            return false;
+          }
+          return true;
+        });
+
+        const baseSpeed = 0.8;
+        const buttonWidth = 172;
+        const rowHeight = 80;
+        const gap = 10;
+        const numRows = 1;
+
+        const repeatCount = Math.max(8, Math.ceil(window.innerWidth / ((buttonWidth + gap) * sections.length)) + 2);
+
+        const colorPalette = [
+          '#aeb7cf',
+          '#ced9f5',
+          '#d1d9ec',
+          '#eef3ff',
+          '#e1e9fc',
+          '#b4bed5',
+          '#c9d3ea'
+        ];
+
+        let offsetX = 0;
+        let isHovering = false;
+        let animationId = null;
+
+        function getButtonColor(buttonIndex) {
+          return colorPalette[buttonIndex % colorPalette.length];
+        }
+
+        function buildMultiRowMarquee() {
+          nav.innerHTML = '';
+          nav.style.overflow = 'visible';
+          nav.style.overflowX = 'visible';
+          nav.style.userSelect = 'none';
+          nav.style.touchAction = 'none';
+          nav.style.position = 'relative';
+          nav.style.width = '100vw';
+          nav.style.maxWidth = '100vw';
+          nav.style.left = '50%';
+          nav.style.transform = 'translateX(-50%)';
+          nav.style.background = 'transparent';
+
+          const marquee = document.createElement('div');
+          marquee.id = 'marquee';
+          marquee.style.overflow = 'visible';
+          marquee.style.width = '200vw';
+          marquee.style.left = '50%';
+          marquee.style.transform = 'translateX(-50%)';
+          marquee.style.position = 'relative';
+          marquee.style.height = '100px';
+
+          const wrapper = document.createElement('div');
+          wrapper.className = 'js-marquee-wrapper';
+          wrapper.style.display = 'grid';
+          wrapper.style.gridAutoFlow = 'column';
+          wrapper.style.gridAutoColumns = (buttonWidth + gap) + 'px';
+          wrapper.style.gridTemplateRows = rowHeight + 'px';
+          wrapper.style.gap = gap + 'px';
+          wrapper.style.justifyContent = 'flex-start';
+          wrapper.style.willChange = 'transform';
+          wrapper.style.position = 'relative';
+
+          const itemCount = sections.length * repeatCount;
+          for (let i = 0; i < itemCount; i++) {
+            const section = sections[i % sections.length];
+            const a = document.createElement('a');
+            a.href = section.href;
+            a.textContent = section.label;
+            a.className = 'nav-button';
+            a.style.display = 'flex';
+            a.style.alignItems = 'center';
+            a.style.justifyContent = 'center';
+            a.style.minWidth = buttonWidth + 'px';
+            a.style.height = '56px';
+            a.style.lineHeight = '56px';
+            a.style.padding = '0 12px';
+            const buttonColor = getButtonColor(i);
+            a.style.backgroundColor = buttonColor;
+            a.style.border = 'none';
+            a.style.borderRadius = '0';
+            a.style.boxShadow = '0 0 0px rgba(0, 0, 0, 0)';
+            a.style.color = '#000';
+            a.style.fontWeight = '600';
+            a.style.textTransform = 'uppercase';
+            a.style.fontSize = '15px';
+            a.style.whiteSpace = 'nowrap';
+            a.style.cursor = 'pointer';
+            a.style.transition = 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out';
+            a.style.textDecoration = 'none';
+
+            a.addEventListener('mouseenter', () => {
+              a.style.transform = 'scale(1.05)';
+              a.style.boxShadow = `0 0 15px 5px ${buttonColor}`;
+            });
+
+            a.addEventListener('mouseleave', () => {
+              a.style.transform = 'scale(1)';
+              a.style.boxShadow = '0 0 0px rgba(0, 0, 0, 0)';
+            });
+
+            wrapper.appendChild(a);
+          }
+
+          marquee.appendChild(wrapper);
+          nav.appendChild(marquee);
+
+          return { marquee, wrapper };
+        }
+
+        const { marquee, wrapper } = buildMultiRowMarquee();
+
+        function updateFrame() {
+          if (!isHovering) {
+            offsetX -= baseSpeed;
+
+            const totalWidth = sections.length * (buttonWidth + gap);
+            if (offsetX <= -totalWidth) {
+              offsetX += totalWidth;
+            }
+          }
+
+          wrapper.style.transform = `translateX(${offsetX}px)`;
+          animationId = requestAnimationFrame(updateFrame);
+        }
+
+        marquee.addEventListener('mouseenter', () => {
+          isHovering = true;
+        });
+
+        marquee.addEventListener('mouseleave', () => {
+          isHovering = false;
+        });
+
+        updateFrame();
+      })();
+    </script>
+  </body>
+</html>
